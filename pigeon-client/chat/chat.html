@@ -4,8 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
+    <link rel="stylesheet" href="chat.css">
 </head>
-<body>
+<body>   
+    <div class="container">
+        <textarea id="textareaMessageBox" rows="15" cols="50" readonly></textarea>
+        <br>
+        <div class="input-row">
+            <input id="inputMessage" placeholder="Write a message...">
+            <button id="buttonSend">Send</button>
+        </div>
+    </div>
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
+    <script type="module" src="/chat/modules/formatDate.mjs"></script>
+    <script type="module" src="/chat/chat.js"></script>
 </body>
 </html>

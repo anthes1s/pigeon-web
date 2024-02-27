@@ -8,11 +8,13 @@ const path = require('path');
 const port = 3000;
 const localhost = require('ip').address();
 
+
+/* this probably needs to be encapsulated */
 const express_server = express();
 const http_server = http.createServer(express_server);
 const io = new Server(http_server);
 
-express_server.use('/', express.static('login'));
+express_server.use(express.static('pigeon-client'));
 
 module.exports = {
 	express_server,

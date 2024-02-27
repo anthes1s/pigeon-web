@@ -1,0 +1,22 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+.container {
+    text-align: center;
+}
+.input-row {
+    margin: auto;
+}
+.input-row input {
+    margin: auto;
+}
+#textareaMessageBox {
+    resize: none;
+}
+#inputMessage {
+    width: 323px;
+}
