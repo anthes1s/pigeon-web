@@ -10,7 +10,7 @@ buttonSignIn.addEventListener('click', () => {
 
     /**
      * Instead of emiting shit from the socket,
-     * i have to make a query request to the database
+     * i have to make a POST request to the database
      * to check if the given person exists, and if it does i need to redirect it to /chat
      * but then i need to do some sort of authorization to the chat so that without a redirect
      * from query you wouldn't be able to go to the /chat route and you'll get 403 forbidden response

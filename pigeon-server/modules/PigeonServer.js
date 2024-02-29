@@ -5,21 +5,34 @@ const express = require('express');
 const { Server } = require('socket.io');
 const path = require('path');
 
-const port = 3000;
-const localhost = require('ip').address();
+class PigeonServer {
+	constructor() {
+		this.express_server = express();
+		this.http_server = http.createServer(this.express_server);
+		this.io = new Server(this.http_server);
 
+		this.express_server.use(express.static('pigeon-client')); 
 
-/* this probably needs to be encapsulated */
-const express_server = express();
-const http_server = http.createServer(express_server);
-const io = new Server(http_server);
+		this.http_server.on('error', (error) => {
+			console.error('HTTP Server Error:', error);
+		});
+	}
 
-express_server.use(express.static('pigeon-client'));
+	get(route, ...middleware) {
+		this.express_server.get(route, ...middleware);
+	}
 
-module.exports = {
-	express_server,
-	http_server,
-	io,
-	port,
-	localhost
+	on(event, callback) {
+		this.io.on(event, callback);
+	}
+
+	emit(event, ...data) {
+		this.io.emit(event, ...data);
+	}
+
+	listen(port = undefined, callback) {
+		this.http_server.listen(port, callback);
+	}
 }
+
+module.exports = PigeonServer;

@@ -1,17 +1,21 @@
 'use strict';
 
-const ps = require('./modules/PigeonServer');
+require('dotenv').config();
+
+const PigeonServer = require('./modules/PigeonServer');
 const path = require('path');
 
-ps.express_server.get('/', (req, res) => {
+const ps = new PigeonServer();
+
+ps.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../pigeon-client/login/login.html'));
 });
 
-ps.express_server.get('/chat', (req, res) => {
+ps.get('/chat', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../pigeon-client/chat/chat.html'))
 });
 
-ps.io.on('connection', (socket) => {
+ps.on('connection', (socket) => {
     console.log(`User connected!`);
 
     socket.on('Sign In', (user) => {
@@ -23,7 +27,7 @@ ps.io.on('connection', (socket) => {
 
     socket.on(`User sent a message`, (message) => {
         console.log(message);
-        ps.io.emit(`Server sent a message`, message);
+        ps.emit(`Server sent a message`, message);
     });
 
     socket.on('disconnect', () => {
@@ -31,6 +35,6 @@ ps.io.on('connection', (socket) => {
     });
 });
 
-ps.http_server.listen(ps.port, ps.localhost, () => {
-    console.log(`Server is running at ${ps.localhost}:${ps.port}`);
+ps.listen(process.env.SERVER_PORT, () => {
+    console.log(`Server is running at ${`localhost`}:${process.env.SERVER_PORT}`);
 });
