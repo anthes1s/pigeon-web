@@ -3,7 +3,6 @@
 const inputLogin = document.getElementById(`inputLogin`);
 const inputPassword = document.getElementById(`inputPassword`);
 const buttonSignIn = document.getElementById(`buttonSignIn`);
-var labelLoginStatus = document.getElementById(`loginLabelStatus`);
 
 buttonSignIn.addEventListener('click', () => { 
     axios.post(`/api/login`, {
@@ -12,11 +11,16 @@ buttonSignIn.addEventListener('click', () => {
     })
     .then((response) => {
         let success = response.data.success;
+
+        console.log(response.data);
+
         if(success) {
 
-            /* Add logic that adds a JWT token to a local storage and redirects to a '/chat' route (don't forget to add authentification to the chat route!) */
-
+            let jwt = response.data.jwt;
+            localStorage.setItem('jwt', jwt);
             console.log(`User exists! Successfully logged in!`);
+
+            window.location.href = `/chat`;
         } else {
 
             /* Add some label to the HTML page that would let the user know that the log in attempt wasn't successfull */

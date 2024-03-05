@@ -5,3 +5,7 @@
     align-items: center; /* Vertical centering */
     height: 100vh; /* Make the div fill the entire viewport height */
 }
+
+.component {
+    margin-top: 1px;
+}
