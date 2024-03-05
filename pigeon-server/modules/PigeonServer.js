@@ -12,14 +12,23 @@ class PigeonServer {
 		this.io = new Server(this.http_server);
 
 		this.express_server.use(express.static('pigeon-client')); 
+		this.express_server.use(express.json());
 
 		this.http_server.on('error', (error) => {
 			console.error('HTTP Server Error:', error);
 		});
 	}
 
+	use(...middleware) {
+		this.express_server.use(...middleware);
+	}
+
 	get(route, ...middleware) {
 		this.express_server.get(route, ...middleware);
+	}
+
+	post(route, ...middleware) {
+		this.express_server.post(route, ...middleware);
 	}
 
 	on(event, callback) {

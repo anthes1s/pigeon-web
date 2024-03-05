@@ -4,21 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <style>
-        .center {
-            display: grid;
-            place-items: center;
-        }
-    </style>
-    
+    <link rel="stylesheet" href="/login/login.css">
 </head>
 <body>
     <div class="center">
-        <input id="inputLogin" placeholder="Login">
-        <input type="password" id="inputPassword" placeholder="Password">
+        <input id="inputLogin" placeholder="Login"><br>
+        <input type="password" id="inputPassword" placeholder="Password"><br>
         <button id="buttonSignIn">Sign In</button>
+        <label id="labelLoginStatus">sdf</label>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/login/login.js"></script>
 </body>
 </html>

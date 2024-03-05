@@ -1,22 +1,30 @@
 'use strict';
 
-const socket = io();
-
 const inputLogin = document.getElementById(`inputLogin`);
 const inputPassword = document.getElementById(`inputPassword`);
 const buttonSignIn = document.getElementById(`buttonSignIn`);
+var labelLoginStatus = document.getElementById(`loginLabelStatus`);
 
-buttonSignIn.addEventListener('click', () => {
+buttonSignIn.addEventListener('click', () => { 
+    axios.post(`/api/login`, {
+        username: inputLogin.value,
+        password: inputPassword.value
+    })
+    .then((response) => {
+        let success = response.data.success;
+        if(success) {
 
-    /**
-     * Instead of emiting shit from the socket,
-     * i have to make a POST request to the database
-     * to check if the given person exists, and if it does i need to redirect it to /chat
-     * but then i need to do some sort of authorization to the chat so that without a redirect
-     * from query you wouldn't be able to go to the /chat route and you'll get 403 forbidden response
-     *  
-     * P.S: I have no fucking clue how to do proper authorization
-     * P.S.S: TODO --- learn how to authorize users onto server ¯\_(ツ)_/¯
-     */
-    socket.emit('Sign In', {login: inputLogin.value, password: inputPassword.value});
+            /* Add logic that adds a JWT token to a local storage and redirects to a '/chat' route (don't forget to add authentification to the chat route!) */
+
+            console.log(`User exists! Successfully logged in!`);
+        } else {
+
+            /* Add some label to the HTML page that would let the user know that the log in attempt wasn't successfull */
+
+            console.log(`User does not exist! Failed to log in!`);
+        }
+    })
+    .catch((error) => {
+        console.error(`User does not exists! Failed to log in!`);
+    });
 });

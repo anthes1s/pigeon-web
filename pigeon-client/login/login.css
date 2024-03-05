@@ -1,0 +1,7 @@
+.center {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+    height: 100vh; /* Make the div fill the entire viewport height */
+}
