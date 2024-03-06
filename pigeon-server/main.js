@@ -25,7 +25,6 @@ ps.post('/api/login', async (req, res) => {
     let {username, password} = req.body;
 
     if(await pd.userExists(username, password)) {
-
         /* Also sign a JWT and send it to the client so he can access `/chat` */
         let token = jwt.sign({username, password}, process.env.ACCESS_JWT_TOKEN);
         res.json({success: true, message: `${username} was found!`, jwt: token});
@@ -33,9 +32,23 @@ ps.post('/api/login', async (req, res) => {
         res.json({ success: false, message: `${username} was not found!`});
     }
     } catch(err) {
-        res.sendStatus(404).json({ success: false, error: `${err.message}`});
+        res.sendStatus(403).json({ success: false, error: `${err.message}`});
     }
 });
+
+ps.post('/api/verify', (req, res) => {
+    let token = req.body.jwt;
+    console.log(token);
+
+    jwt.verify(token, process.env.ACCESS_JWT_TOKEN, (err, decoded) => {
+        if(err) {
+            console.log(err.message);
+            return res.sendStatus(403);
+        }
+        console.log(decoded);
+        res.sendStatus(200);
+    });
+})
 
 /* Before handling `/chat` make a proper authorization YOU FUCKING TWAT */ 
 
@@ -45,7 +58,7 @@ ps.on('connection', async (socket) => {
     socket.emit('Initial message history load', messageHistory);
     
     socket.on('Sign In', (user) => {
-        console.log(user);
+        
     })
 
     socket.on(`User sent a message`, (msg) => {
@@ -55,8 +68,6 @@ ps.on('connection', async (socket) => {
          * 3) Emit it back
          * 4) Add it to the database
         **/
-
-
         jwt.verify(msg.jwt, process.env.ACCESS_JWT_TOKEN, (err, decoded) => {
         if(err) {
             console.error(`Error: ${err.message}`);
@@ -70,7 +81,6 @@ ps.on('connection', async (socket) => {
             ps.emit(`Server sent a message`, messageToSend);
 
             pd.addMessage(`global`, {date: timestamp, username: username, message: message});
-
         });    
     });
 

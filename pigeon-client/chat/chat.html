@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="chat.css">
 </head>
 <body>   
-    <div class="container">
+    <div id="maindiv" class="container">
         <textarea id="textareaMessageBox" rows="15" cols="50" readonly></textarea>
         <br>
         <div class="input-row">
@@ -15,7 +15,9 @@
             <button id="buttonSend">Send</button>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>  
+    <script type="module" src="/chat/modules/establishConnection.mjs"></script>
     <script type="module" src="/chat/modules/formatDate.mjs"></script>
     <script type="module" src="/chat/chat.js"></script>
 </body>

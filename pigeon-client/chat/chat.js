@@ -1,46 +1,29 @@
 'use strict';
 
-import { formatDate } from './modules/formatDate.mjs';
-
-const socket = io();
+import { establishConnection } from "./modules/establishConnection.mjs";
 
 const inputMessage = document.getElementById(`inputMessage`);
 const textareaMessageBox = document.getElementById(`textareaMessageBox`);
 const buttonSend = document.getElementById(`buttonSend`);
+const maindiv = document.getElementById(`maindiv`); 
 
-socket.on(`Initial message history load`, (msgHistory) => {
-    for(let msg of msgHistory) {
-        let message = `${formatDate(Number(msg.date_timestamp))}${msg.username} - ${msg.message}\n`;
-        textareaMessageBox.append(message);
-    }
+/* Validate JWT */
+axios.post(`/api/verify`, {
+    jwt: localStorage.getItem('jwt')
+})
+.then(response => {
+    console.log(response.status);
+    establishConnection();
+})
+.catch(err => {
+    console.error(err.message);
+    inputMessage.parentNode.removeChild(inputMessage);
+    buttonSend.parentNode.removeChild(buttonSend);
+    textareaMessageBox.parentNode.removeChild(textareaMessageBox);
+
+    let statusLabel = document.createElement("statusLabel");
+    statusLabel.textContent = "403 - Forbidden";
+    statusLabel.classList.add("container");
+    maindiv.appendChild(statusLabel);
 });
-
-socket.on(`Server sent a message`, (msg) => {
-    let message = `${formatDate(msg.date)}${msg.username} - ${msg.message}\n`;
-    textareaMessageBox.append(message);
-
-    inputMessage.value = "";
-});
-
-socket.on(`User sent a message`, (message) => {
-    console.log(message);
-    ps.emit(`Server sent a message`, message);
-});
-
-buttonSend.addEventListener('click', () => {
-    let message = {
-        date: Date.now(),
-        message: inputMessage.value,
-        jwt: localStorage.getItem('jwt') 
-    }
-
-    if(inputMessage.value) {
-        socket.emit(`User sent a message`, message);
-    } else {
-        /* Show some sort of error that says that the message can't be empty */
-        return;
-    }
-
-});
-
-
+   
