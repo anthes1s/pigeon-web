@@ -6,11 +6,13 @@
     <title>Pigeon - Chat</title>
     <link rel="stylesheet" href="chat.css">
 </head>
-<body>   
+<body>
     <div id="maindiv" class="container">
+        <!-- Hide these components by default, then CSR them depending on the JWT verification result -->
         <textarea id="textareaMessageBox" rows="15" cols="50" readonly></textarea>
         <br>
         <div class="input-row">
+            <!-- Hide these components by default, then CSR them depending on the JWT verification result -->
             <input id="inputMessage" placeholder="Write a message...">
             <button id="buttonSend">Send</button>
         </div>

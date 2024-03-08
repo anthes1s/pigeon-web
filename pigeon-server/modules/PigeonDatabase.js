@@ -16,7 +16,7 @@ class PigeonDatabase {
             console.log("PostgreSQL successfully connected!")
         })
         .catch((err) => {
-            console.error(`Error: ${err.message}`);
+            console.error(`PostgreSQL Error: ${err.message}`);
         })
     }
 
@@ -26,7 +26,15 @@ class PigeonDatabase {
             return Boolean(user.rowCount);
         } catch(err) {
             console.error(`${username} not found!\nError: ${err.message}`);
-            throw err;
+        }
+    }
+
+    async usernameExists(username) {
+        try{
+            let user = await this._client.query(`SELECT username FROM users WHERE username = '${username}'`);
+            return Boolean(user.rowCount);
+        } catch(err) {
+            console.error(`${username} not found!\nError: ${err.message}`);
         }
     }
 
@@ -36,12 +44,16 @@ class PigeonDatabase {
             let messageHistory = await this._client.query(`SELECT * FROM ${tableName}`);
             return messageHistory.rows;
         } catch(err) {
-            console.error(`Error occured while fetching message history`);
+            console.error(`Error occured while fetching message history: ${err.message}`);
         }
     }
 
     async addMessage(tableName, msgObject) {
         await this._client.query(`INSERT INTO ${tableName} (date_timestamp, username, message) VALUES (${msgObject.date}, '${msgObject.username}', '${msgObject.message}')`);
+    }
+
+    async addUser(username, password) {
+        await this._client.query(`INSERT INTO users (username, password) VALUES ('${username}', '${password}')`);
     }
 }
 

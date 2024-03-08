@@ -15,12 +15,16 @@ class PigeonServer {
 		this.express_server.use(express.json());
 
 		this.http_server.on('error', (error) => {
-			console.error('HTTP Server Error:', error);
+			console.error('HTTP Server Error:', error.message);
 		});
 	}
 
 	use(...middleware) {
 		this.express_server.use(...middleware);
+	}
+	
+	use(route, ...middleware) {
+		this.express_server.use(route, ...middleware)
 	}
 
 	get(route, ...middleware) {
