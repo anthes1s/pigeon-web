@@ -3,8 +3,10 @@
 import { formatDate } from './formatDate.mjs';
 
 export function establishConnection() {
-    const socket = io();
-    
+    const socket = io({
+        query: { jwt: localStorage.getItem('jwt') }
+    }); /* I need to send a username upon connection */
+
     socket.on(`Initial message history load`, (msgHistory) => {
         for(let msg of msgHistory) {
             let message = `${formatDate(Number(msg.date_timestamp))}${msg.username} - ${msg.message}\n`;

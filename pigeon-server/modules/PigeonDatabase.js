@@ -20,6 +20,7 @@ class PigeonDatabase {
         })
     }
 
+    /* Next two functions (userExists and usernameExists) is one of the reasons i should switch to Typescript */
     async userExists(username, password) {
         try{
             let user = await this._client.query(`SELECT username, password FROM users WHERE username = '${username}' AND password ='${password}'`);

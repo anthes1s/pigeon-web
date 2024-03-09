@@ -15,17 +15,6 @@ statusPasswordLabel.style.marginTop = '4px';
 statusPasswordLabel.textContent = "Your password is too short, make it longer (pls)";
 statusPasswordLabel.style.color = "#FF0000";
 
-
-
-/**
- * 
- * 1) Check if Login is not too long (up to 255 chars);
- * 2) Check if the password is not too short (starting from 8 chars);
- * 3) Encrypt password
- * 4) Send the credentials to the database
- *   
- * */ 
-
 inputLogin.addEventListener('keydown', () => {
     let loginLength = inputLogin.value.length;
     if((loginLength + 1) > 255) {
@@ -61,12 +50,10 @@ buttonFinish.addEventListener('click', () => {
     }
 
     axios.post('/api/register', {
-        /* This should be encrypted */
         username: inputLogin.value,
         password: inputPassword.value
     })
     .then(response => {
-        /* Same user might exists, so handle that too */
         console.log(`Successful response: `, response.data);
 
         let statusRegistrationLabel = document.createElement("label");

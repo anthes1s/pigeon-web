@@ -7,44 +7,40 @@ const path = require('path');
 
 class PigeonServer {
 	constructor() {
-		this.express_server = express();
-		this.http_server = http.createServer(this.express_server);
-		this.io = new Server(this.http_server);
+		this._express_server = express();
+		this._http_server = http.createServer(this._express_server);
+		this._io = new Server(this._http_server);
 
-		this.express_server.use(express.static('pigeon-client')); 
-		this.express_server.use(express.json());
+		this._express_server.use(express.static('pigeon-client')); 
+		this._express_server.use(express.json());
 
-		this.http_server.on('error', (error) => {
+		this._http_server.on('error', (error) => {
 			console.error('HTTP Server Error:', error.message);
 		});
 	}
 
 	use(...middleware) {
-		this.express_server.use(...middleware);
-	}
-	
-	use(route, ...middleware) {
-		this.express_server.use(route, ...middleware)
+		this._express_server.use(...middleware);
 	}
 
 	get(route, ...middleware) {
-		this.express_server.get(route, ...middleware);
+		this._express_server.get(route, ...middleware);
 	}
 
 	post(route, ...middleware) {
-		this.express_server.post(route, ...middleware);
+		this._express_server.post(route, ...middleware);
 	}
 
 	on(event, callback) {
-		this.io.on(event, callback);
+		this._io.on(event, callback);
 	}
 
 	emit(event, ...data) {
-		this.io.emit(event, ...data);
+		this._io.emit(event, ...data);
 	}
 
 	listen(port = undefined, callback) {
-		this.http_server.listen(port, callback);
+		this._http_server.listen(port, callback);
 	}
 }
 
