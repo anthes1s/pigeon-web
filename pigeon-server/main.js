@@ -3,58 +3,18 @@
 require('dotenv').config();
 
 const PigeonApplication = require('./modules/PigeonApplication');
-const jwt = require('jsonwebtoken');
 const path = require('path');
+const jwt = require('jsonwebtoken');
 
-/* Encapsulate this into a PigeonApplication? */
 const pa = new PigeonApplication();
 
-pa.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../pigeon-client/login/login.html'));
-});
+pa.use('/login',    pa.static(path.resolve(__dirname, '../pigeon-client/login')));
+pa.use('/chat',     pa.static(path.resolve(__dirname, '../pigeon-client/chat')));
+pa.use('/register', pa.static(path.resolve(__dirname, '../pigeon-client/register')));
+pa.use('/api',      pa.getAPIRouter());
 
-pa.get('/chat', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../pigeon-client/chat/chat.html'));
-});
-
-pa.get('/register', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../pigeon-client/register/register.html'));
-});
-
-/* TODO: Create an ExpressJS router for `/api/...` */
-pa.post('/api/login', async (req, res) => {
-    try {
-        let {username, password} = req.body;
-        if(await pa.userExists(username, password)) {
-            /* Do not transfer a password into a JWTs payload? */
-            let token = jwt.sign({ username }, process.env.ACCESS_JWT_TOKEN);
-            res.json({success: true, message: `${username} was found!`, jwt: token});
-        } else {
-            res.json({ success: false, message: `${username} was not found!`});
-        }
-    } catch(err) {
-        res.sendStatus(403).json({ success: false, error: `${err.message}`});
-    }
-});
-
-pa.post('/api/verify', (req, res) => {
-    let token = req.body.jwt;
-    jwt.verify(token, process.env.ACCESS_JWT_TOKEN, (err, decoded) => {
-        if(err) {
-            return res.sendStatus(403);
-        }
-        res.sendStatus(200);
-    });
-})
-
-pa.post('/api/register', async (req, res) => {
-    let {username, password} = req.body;
-    if(await pa.usernameExists(username)) {
-        res.json({success: false, message: "Username was already taken"});
-    } else {
-        await pa.addUser(username, password);
-        res.json({success: true, message: "Registation successful" });
-    }
+pa.get('/', (req, res) => { 
+    res.redirect('/login'); 
 });
 
 /* TODO: Refactor this somehow */
@@ -84,7 +44,6 @@ pa.on('connection', async (socket) => {
 
             const messageToSend = {date: timestamp, username: username, message: message};  
             pa.emit(`Server sent a message`, messageToSend);
-
             pa.addMessage(`global`, {date: timestamp, username: username, message: message});
         });    
     });

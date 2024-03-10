@@ -1,9 +1,8 @@
 'use strict';
 
+const { Server } = require('socket.io');
 const http = require('http');
 const express = require('express');
-const { Server } = require('socket.io');
-const path = require('path');
 
 class PigeonServer {
 	constructor() {
@@ -11,16 +10,19 @@ class PigeonServer {
 		this._http_server = http.createServer(this._express_server);
 		this._io = new Server(this._http_server);
 
-		this._express_server.use(express.static('pigeon-client')); 
 		this._express_server.use(express.json());
-
+		
 		this._http_server.on('error', (error) => {
 			console.error('HTTP Server Error:', error.message);
 		});
 	}
 
-	use(...middleware) {
-		this._express_server.use(...middleware);
+	static(root) {
+		return express.static(root)
+	}
+
+	use(route = undefined, ...middleware) {
+		this._express_server.use(route, ...middleware);
 	}
 
 	get(route, ...middleware) {
@@ -41,6 +43,10 @@ class PigeonServer {
 
 	listen(port = undefined, callback) {
 		this._http_server.listen(port, callback);
+	}
+
+	getRouter() {
+		return express.Router(); 
 	}
 }
 

@@ -3,6 +3,7 @@
 const PigeonServer = require('./PigeonServer');
 const PigeonDatabase = require('./PigeonDatabase');
 const PigeonSocketManager = require('./PigeonSocketManager');
+const jwt = require('jsonwebtoken');
 
 class PigeonApplication {
     constructor() {
@@ -12,7 +13,8 @@ class PigeonApplication {
     }
 
     /* PigeonServer Functions */
-    use(...middleware)          { this._ps.use(...middleware) }
+    static(root)                { return this._ps.static(root) }
+    use(route, ...middleware)   { this._ps.use(route, ...middleware) }
     get(route, ...middleware)   { this._ps.get(route, ...middleware) }
     post(route, ...middleware)  { this._ps.post(route, ...middleware) }
     on(event, callback)         { this._ps.on(event, callback) }
@@ -30,6 +32,48 @@ class PigeonApplication {
     addSocket(username, socket) { this._psm.addSocket(username, socket) }
     deleteSocket(socket)        { this._psm.deleteSocket(socket) }
     getSocket(username)         { return this._psm.getSocket(username) }
+
+    /* Create additional routers using PigeonServers getRouter method */
+    getAPIRouter() {
+        const router = this._ps.getRouter();
+
+        /* Now create callbacks as a controllers in a different file/object */
+        router.post('/login', async (req, res) => {
+            try {
+                let {username, password} = req.body;
+                if(await this.userExists(username, password)) {
+                    let token = jwt.sign({ username }, process.env.ACCESS_JWT_TOKEN);
+                    res.json({success: true, message: `${username} was found!`, jwt: token});
+                } else {
+                    res.json({ success: false, message: `${username} was not found!`});
+                }
+            } catch(err) {
+                res.sendStatus(403).json({ success: false, error: `${err.message}`});
+            }
+        });
+
+        router.post('/verify', (req, res) => {
+            let token = req.body.jwt;
+            jwt.verify(token, process.env.ACCESS_JWT_TOKEN, (err, decoded) => {
+                if(err) {
+                    return res.sendStatus(403);
+                }
+                res.sendStatus(200);
+            });
+        })
+
+        router.post('/register', async (req, res) => {
+            let {username, password} = req.body;
+            if(await this.usernameExists(username)) {
+                res.json({success: false, message: "Username was already taken"});
+            } else {
+                await this.addUser(username, password);
+                res.json({success: true, message: "Registation successful" });
+            }
+        });
+
+        return router;
+    }
 }
 
 module.exports = PigeonApplication;
