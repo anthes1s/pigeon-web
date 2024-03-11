@@ -29,22 +29,53 @@ pa.on('connection', async (socket) => {
         pa.addSocket(decoded.username, socket);
     });
 
-    let messageHistory = await pa.getMessageHistory(`global`);
-    socket.emit('Initial message history load', messageHistory);
+    socket.on(`Get message history`, async (req) => {  
+        jwt.verify(req.sender, process.env.ACCESS_JWT_TOKEN, async (err, decoded) => {
+            if(err) {
+                console.error(`Error occurred: ${err.message}`);
+            }
+
+            let sender = decoded.username;
+            let receiver = req.receiver;
+            
+            let chatroomName = await pa.chatroomFind(sender, receiver);
+            
+            /* If chat room doesn't exist, create it! */
+            if(chatroomName === `Table not found`) {
+                await pa.chatroomCreate(sender, receiver);
+                chatroomName = await pa.chatroomFind(sender, receiver);
+            }
+
+            let messageHistory = await pa.getMessageHistory(chatroomName);
+
+            socket.emit('Server sent a message history', messageHistory);
+        });
+
+    });
 
     socket.on(`User sent a message`, (msg) => {
-        jwt.verify(msg.jwt, process.env.ACCESS_JWT_TOKEN, (err, decoded) => {
+        jwt.verify(msg.jwt, process.env.ACCESS_JWT_TOKEN, async (err, decoded) => {
         if(err) {
             console.error(`Error: ${err.message}`);
             return;
         }
-            const timestamp = msg.date;
-            const username = decoded.username;
+
+            const timestamp = msg.date_timestamp;
+            const sender = decoded.username;
+            const receiver = msg.receiver;
             const message = msg.message;
 
-            const messageToSend = {date: timestamp, username: username, message: message};  
-            pa.emit(`Server sent a message`, messageToSend);
-            pa.addMessage(`global`, {date: timestamp, username: username, message: message});
+            const messageToSend = { date_timestamp: timestamp, username: sender, message: message };  
+
+            
+            pa.getSocket(sender).emit(`Server sent a message`, messageToSend);
+            pa.getSocket(receiver).emit(`Server sent a message`, messageToSend);
+                
+            
+            
+
+            let chatroomName = await pa.chatroomFind(sender, receiver);
+            await pa.addMessage(chatroomName, { date_timestamp: timestamp, username: sender, message: message });
         });    
     });
 
@@ -52,6 +83,7 @@ pa.on('connection', async (socket) => {
         console.log(`User disconnected!`);
         pa.deleteSocket(socket);
     });
+
 });
 
 pa.listen(process.env.SERVER_PORT, () => {

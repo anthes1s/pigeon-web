@@ -1,5 +1,7 @@
 'use strict';
 
+/* check if localStorage.getItem('jwt') is not undefined, and if so, redirect to `/chat` */
+
 const inputLogin = document.getElementById(`inputLogin`);
 const inputPassword = document.getElementById(`inputPassword`);
 const buttonSignIn = document.getElementById(`buttonSignIn`);

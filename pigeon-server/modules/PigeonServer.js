@@ -17,10 +17,6 @@ class PigeonServer {
 		});
 	}
 
-	static(root) {
-		return express.static(root)
-	}
-
 	use(route = undefined, ...middleware) {
 		this._express_server.use(route, ...middleware);
 	}
@@ -43,6 +39,10 @@ class PigeonServer {
 
 	listen(port = undefined, callback) {
 		this._http_server.listen(port, callback);
+	}
+
+	static(root) {
+		return express.static(root)
 	}
 
 	getRouter() {

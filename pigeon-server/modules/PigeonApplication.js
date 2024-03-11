@@ -13,31 +13,48 @@ class PigeonApplication {
     }
 
     /* PigeonServer Functions */
-    static(root)                { return this._ps.static(root) }
-    use(route, ...middleware)   { this._ps.use(route, ...middleware) }
-    get(route, ...middleware)   { this._ps.get(route, ...middleware) }
-    post(route, ...middleware)  { this._ps.post(route, ...middleware) }
-    on(event, callback)         { this._ps.on(event, callback) }
-    emit(event, ...data)        { this._ps.emit(event, ...data) }
-    listen(port, callback)      { this._ps.listen(port, callback) }
-    
+    static(root)                                { return this._ps.static(root) }
+    use(route, ...middleware)                   { this._ps.use(route, ...middleware) }
+    get(route, ...middleware)                   { this._ps.get(route, ...middleware) }
+    post(route, ...middleware)                  { this._ps.post(route, ...middleware) }
+    on(event, callback)                         { this._ps.on(event, callback) }
+    emit(event, ...data)                        { this._ps.emit(event, ...data) }
+    listen(port, callback)                      { this._ps.listen(port, callback) }
+	
     /* PigeonDatabase Functions */
-    async userExists(username, password)      { return await this._pd.userExists(username, password) }
-    async usernameExists(username)            { return await this._pd.usernameExists(username) }
-    async getMessageHistory(tableName)        { return await this._pd.getMessageHistory(tableName) }
-    async addMessage(tableName, msgObject)    { await this._pd.addMessage(tableName, msgObject) }
-    async addUser(username, password)         { await this._pd.addUser(username, password) }
+    async userFind(username)                    { return await this._pd.userFind(username) }
+    async userExists(username, password)        { return await this._pd.userExists(username, password) }
+    async usernameExists(username)              { return await this._pd.usernameExists(username) }
+    async getMessageHistory(tableName)          { return await this._pd.getMessageHistory(tableName) }
+    async addMessage(tableName, msgObject)      { await this._pd.addMessage(tableName, msgObject) }
+    async addUser(username, password)           { await this._pd.addUser(username, password) }
+    async chatroomFind(sender, receiver)        { return await this._pd.chatroomFind(sender, receiver) }
+    async chatroomCreate(sender, receiver)      { await this._pd.chatroomCreate(sender, receiver) }
     
     /* PigeonSocketManager Functions */
-    addSocket(username, socket) { this._psm.addSocket(username, socket) }
-    deleteSocket(socket)        { this._psm.deleteSocket(socket) }
-    getSocket(username)         { return this._psm.getSocket(username) }
+    addSocket(username, socket)                 { this._psm.addSocket(username, socket) }
+    deleteSocket(socket)                        { this._psm.deleteSocket(socket) }
+    getSocket(username)                         { return this._psm.getSocket(username) }
 
     /* Create additional routers using PigeonServers getRouter method */
     getAPIRouter() {
         const router = this._ps.getRouter();
 
         /* Now create callbacks as a controllers in a different file/object */
+
+        router.post(`/search`, async (req, res) => {
+            /* Find a username in a DB*/
+            try {
+                let { username } = req.body;
+                if(!username) return res.json({ success: true, message: `Users were successfully found!`, data: [] })
+
+                let usersFound = await this.userFind(username);
+                res.json({ success: true, message: `Users were successfully found!`, data: usersFound });
+            } catch(err) {
+                res.json({ success: false, message: `Error occured: ${err.message}` });
+            }
+        });
+
         router.post('/login', async (req, res) => {
             try {
                 let {username, password} = req.body;
