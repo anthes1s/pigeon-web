@@ -58,22 +58,22 @@ pa.on('connection', async (socket) => {
         if(err) {
             console.error(`Error: ${err.message}`);
             return;
-        }
+        }   
+            console.log(msg);
 
             const timestamp = msg.date_timestamp;
             const sender = decoded.username;
             const receiver = msg.receiver;
             const message = msg.message;
 
-            const messageToSend = { date_timestamp: timestamp, username: sender, message: message };  
+            const messageToSend = { date_timestamp: timestamp, username: sender, message: message, receiver: msg.receiver };  
 
-            
             pa.getSocket(sender).emit(`Server sent a message`, messageToSend);
-            pa.getSocket(receiver).emit(`Server sent a message`, messageToSend);
+            
+            if(pa.getSocket(receiver)) {
+                pa.getSocket(receiver).emit(`Server sent a message`, messageToSend);
+            }
                 
-            
-            
-
             let chatroomName = await pa.chatroomFind(sender, receiver);
             await pa.addMessage(chatroomName, { date_timestamp: timestamp, username: sender, message: message });
         });    

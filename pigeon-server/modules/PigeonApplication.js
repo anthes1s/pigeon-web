@@ -60,7 +60,7 @@ class PigeonApplication {
                 let {username, password} = req.body;
                 if(await this.userExists(username, password)) {
                     let token = jwt.sign({ username }, process.env.ACCESS_JWT_TOKEN);
-                    res.json({success: true, message: `${username} was found!`, jwt: token});
+                    res.json({success: true, message: `${username} was found!`, jwt: token, username: username});
                 } else {
                     res.json({ success: false, message: `${username} was not found!`});
                 }

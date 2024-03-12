@@ -21,6 +21,7 @@ function addUserToList(username, socket) {
 
     link.addEventListener(`click`, (event) => {
         receiver = username;
+        console.log(receiver);
 
         textareaMessageBox.innerHTML = '';
         event.preventDefault();
@@ -38,7 +39,8 @@ axios.post(`/api/verify`, {
 })
 .then(response => {
     console.log(response.status);
-
+    console.log(`Receiver - `, receiver);
+    
     const socket = io({
         query: { jwt: localStorage.getItem('jwt') }
     }); 
@@ -57,6 +59,11 @@ axios.post(`/api/verify`, {
     });
     
     socket.on(`Server sent a message`, (msg) => {
+        if(msg.username != receiver) {
+            console.log(`User is not connected to the proper chatroom!`);
+            return;
+        }
+
         let message = `${formatDate(msg.date_timestamp)}${msg.username} - ${msg.message}\n`;
         textareaMessageBox.append(message);
     
@@ -64,13 +71,14 @@ axios.post(`/api/verify`, {
     });
     
     socket.on(`User sent a message`, (message) => {
-        console.log(message);
         ps.emit(`Server sent a message`, message);
     });
     
     buttonSend.addEventListener('click', () => {
-        if(!receiver) return;
-        
+        if(!receiver) {
+            console.log(`Search for a user to send a message to him!`)
+            return;
+        }
 
         let msg = { 
             receiver: receiver,
@@ -80,6 +88,10 @@ axios.post(`/api/verify`, {
         }
 
         if(inputMessage.value) {
+            let message = `${formatDate(msg.date_timestamp)}${localStorage.getItem('username')} - ${msg.message}\n`;
+            textareaMessageBox.append(message);
+            inputMessage.value = "";
+
             socket.emit(`User sent a message`, msg);
         } else {
             /* Show some sort of error that says that the message can't be empty */

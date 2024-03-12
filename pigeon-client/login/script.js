@@ -20,6 +20,9 @@ buttonSignIn.addEventListener('click', () => {
 
         if(success) {
             let jwt = response.data.jwt;
+            let username = response.data.username;
+            
+            localStorage.setItem('username', username);
             localStorage.setItem('jwt', jwt);
 
             statusLabel.style.color = "#008000";
