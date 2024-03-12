@@ -67,8 +67,6 @@ pa.on('connection', async (socket) => {
             const message = msg.message;
 
             const messageToSend = { date_timestamp: timestamp, username: sender, message: message, receiver: msg.receiver };  
-
-            pa.getSocket(sender).emit(`Server sent a message`, messageToSend);
             
             if(pa.getSocket(receiver)) {
                 pa.getSocket(receiver).emit(`Server sent a message`, messageToSend);
