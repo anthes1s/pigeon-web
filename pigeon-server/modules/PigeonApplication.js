@@ -90,13 +90,15 @@ class PigeonApplication {
             }
         });
 
+
+        /* Add Redis caching here */
         router.post(`/favorites`, async (req, res) => {
             let username = req.body.username;
-            /* search for every table that has ${username} in it */ 
             let result = await this._pd.chatroomFavorites(username);
             let favorites = []
             for(let row of result) {
-                favorites.push(row.table_name.split('_')[1]);
+                if(row.table_name.split(`_`)[0] === username) favorites.push(row.table_name.split('_')[1]);
+                else if(row.table_name.split(`_`)[1] === username) favorites.push(row.table_name.split('_')[0]);
             }
             res.json({success: true, data: favorites });
         })

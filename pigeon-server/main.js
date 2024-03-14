@@ -46,6 +46,7 @@ pa.on('connection', async (socket) => {
                 chatroomName = await pa.chatroomFind(sender, receiver);
             }
 
+            /* Add Redis caching here */
             let messageHistory = await pa.getMessageHistory(chatroomName);
 
             socket.emit('Server sent a message history', messageHistory);
@@ -68,7 +69,7 @@ pa.on('connection', async (socket) => {
 
             const messageToSend = { date_timestamp: timestamp, username: sender, message: message, receiver: msg.receiver };  
             
-            if(pa.getSocket(receiver)) {
+            if(pa.getSocket(receiver)) { // Check if user is online, basically
                 pa.getSocket(receiver).emit(`Server sent a message`, messageToSend);
             }
                 
@@ -93,6 +94,8 @@ pa.listen(process.env.SERVER_PORT, () => {
  * 1) Function overloading
  * 2) Something else that I've completely forgotten 
  * 3) `Implements` that kind of works like a multiple inheritance
- * 4) This whole shit would look better if i written it on Nest+TS
+ * 4) I need to learn NestJS+TS anyways
+ * 5) Being able to choose return type of a function is actually quite nice
+ * ?) ...
  * ?) To be continued
  */

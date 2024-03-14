@@ -70,6 +70,7 @@ class PigeonDatabase {
             }
 
             let messageHistory = await this._client.query(options);
+            console.log(messageHistory.rows);
             return messageHistory.rows;
         } catch(err) {
             console.error(`Error occured while fetching message history: ${err.message}`);
@@ -132,9 +133,11 @@ class PigeonDatabase {
     async chatroomFavorites(username) {
         const options = { 
             text: `SELECT table_name FROM information_schema.tables 
-                   WHERE table_name LIKE $1`,
-            values: [username + '%']
+                   WHERE table_name LIKE $1
+                   AND table_name NOT LIKE $2`,
+            values: ['%' + username + '%', `${username}_${username}_msghistory`]
         }
+        
         let result = await this._client.query(options);
         return result.rows;
     }

@@ -114,25 +114,35 @@ axios.post(`/api/verify`, {
     inputSearch.addEventListener('input', () => {
         let username = inputSearch.value;
         listUsers.innerHTML = '';
+        
         if(!username) {
-            for(let user of favorites) {
-                listUsers.appendChild(addUserToList(user, socket));
-            }
-        }
+            axios.post(`/api/favorites`, {
+                username: localStorage.getItem(`username`)
+            })
+            .then(async (response) => {
+                favorites = response.data.data;
+                for (let user of favorites) {
+                    listUsers.appendChild(addUserToList(user, socket));
+                }
+            })
+            .catch(err => {
+                console.error(err.message);
+            });
+        } else {
+            axios.post(`/api/search`, {
+                    username: username
+            })
+            .then(response => {
+                let usersFound = response.data.data;
 
-        axios.post(`/api/search`, {
-                username: username
-        })
-        .then(response => {
-            let usersFound = response.data.data;
-
-            for(let user of usersFound) {
-                listUsers.appendChild(addUserToList(user.username, socket));
-            }
-        })
-        .catch(err => {
-            console.error(err.message);
-        });       
+                for(let user of usersFound) {
+                    listUsers.appendChild(addUserToList(user.username, socket));
+                }
+            })
+            .catch(err => {
+                console.error(err.message);
+            });      
+        } 
     });   
 })
 .catch(err => {
