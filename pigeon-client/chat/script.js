@@ -10,6 +10,7 @@ const listUsers = document.getElementById(`listUsers`);
 const maindiv = document.getElementById(`maindiv`); 
 
 let receiver = '';
+let favorites = [];
 
 function addUserToList(username, socket) {
     let item = document.createElement(`li`);
@@ -27,7 +28,6 @@ function addUserToList(username, socket) {
         event.preventDefault();
         /* Create a request from which you'll get a message history with that user */
         socket.emit('Get message history', {sender: localStorage.getItem('jwt'), receiver: username});
-        console.log(`${username} clicked!`);
     });
 
     return item;
@@ -37,13 +37,24 @@ function addUserToList(username, socket) {
 axios.post(`/api/verify`, {
     jwt: localStorage.getItem('jwt')
 })
-.then(response => {
-    console.log(response.status);
-    console.log(`Receiver - `, receiver);
-    
+.then(async (response) => {  
     const socket = io({
         query: { jwt: localStorage.getItem('jwt') }
     }); 
+
+    await axios.post(`/api/favorites`, {
+        username: localStorage.getItem(`username`)
+    })
+    .then(async (response) => {
+        favorites = await response.data.data;
+        for (let user of favorites) {
+            listUsers.appendChild(addUserToList(user, socket));
+        }
+    })
+    .catch(err => {
+        console.error(err.message);
+    })
+
 
     socket.on(`Server is asking for a receiver`, () => {
         socket.emit(`User responds with a receiver`, receiver);
@@ -100,11 +111,14 @@ axios.post(`/api/verify`, {
     
     });
 
-    /* */
-    inputSearch.addEventListener('input', (input) => {
-        /* Make a GET request to the DB to check for the username */
+    inputSearch.addEventListener('input', () => {
         let username = inputSearch.value;
         listUsers.innerHTML = '';
+        if(!username) {
+            for(let user of favorites) {
+                listUsers.appendChild(addUserToList(user, socket));
+            }
+        }
 
         axios.post(`/api/search`, {
                 username: username
@@ -118,7 +132,7 @@ axios.post(`/api/verify`, {
         })
         .catch(err => {
             console.error(err.message);
-        })
+        });       
     });   
 })
 .catch(err => {

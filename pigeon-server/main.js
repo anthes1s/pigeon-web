@@ -93,6 +93,6 @@ pa.listen(process.env.SERVER_PORT, () => {
  * 1) Function overloading
  * 2) Something else that I've completely forgotten 
  * 3) `Implements` that kind of works like a multiple inheritance
- * ?) ...
+ * 4) This whole shit would look better if i written it on Nest+TS
  * ?) To be continued
  */

@@ -128,6 +128,17 @@ class PigeonDatabase {
         
         await this._client.query(options);
     }
+
+    async chatroomFavorites(username) {
+        const options = { 
+            text: `SELECT table_name FROM information_schema.tables 
+                   WHERE table_name LIKE $1`,
+            values: [username + '%']
+        }
+        let result = await this._client.query(options);
+        return result.rows;
+    }
+
 }
 
 module.exports = PigeonDatabase;

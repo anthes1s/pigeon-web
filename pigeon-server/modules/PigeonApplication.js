@@ -30,6 +30,7 @@ class PigeonApplication {
     async addUser(username, password)           { await this._pd.addUser(username, password) }
     async chatroomFind(sender, receiver)        { return await this._pd.chatroomFind(sender, receiver) }
     async chatroomCreate(sender, receiver)      { await this._pd.chatroomCreate(sender, receiver) }
+    async chatroomFavorites(username)           { return await this._pd.chatroomFavorites(username) }
     
     /* PigeonSocketManager Functions */
     addSocket(username, socket)                 { this._psm.addSocket(username, socket) }
@@ -88,6 +89,17 @@ class PigeonApplication {
                 res.json({success: true, message: "Registation successful" });
             }
         });
+
+        router.post(`/favorites`, async (req, res) => {
+            let username = req.body.username;
+            /* search for every table that has ${username} in it */ 
+            let result = await this._pd.chatroomFavorites(username);
+            let favorites = []
+            for(let row of result) {
+                favorites.push(row.table_name.split('_')[1]);
+            }
+            res.json({success: true, data: favorites });
+        })
 
         return router;
     }
