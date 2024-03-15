@@ -62,7 +62,7 @@ axios.post(`/api/verify`, {
 
     socket.on('Server sent a message history', (msgHistory) => {
         if(!msgHistory) return;
-
+        console.log(msgHistory);
         for(let msg of msgHistory) {
             let message = `${formatDate(msg.date_timestamp)}${msg.username} - ${msg.message}\n`;
             textareaMessageBox.append(message);

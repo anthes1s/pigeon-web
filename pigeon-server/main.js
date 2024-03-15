@@ -43,13 +43,18 @@ pa.on('connection', async (socket) => {
             /* If chat room doesn't exist, create it! */
             if(chatroomName === `Table not found`) {
                 await pa.chatroomCreate(sender, receiver);
-                chatroomName = await pa.chatroomFind(sender, receiver);
+                chatroomName = await pa.chatroomFind(sender, receiver);       
             }
 
             /* Add Redis caching here */
-            let messageHistory = await pa.getMessageHistory(chatroomName);
-
-            socket.emit('Server sent a message history', messageHistory);
+            if(await pa.checkCache(chatroomName)) {
+                let messageHistory = await pa.getCache(chatroomName);
+                socket.emit('Server sent a message history', messageHistory);              
+            } else {
+                let messageHistory = await pa.getMessageHistory(chatroomName);
+                pa.setCache(chatroomName, messageHistory);
+                socket.emit('Server sent a message history', messageHistory);
+            }           
         });
 
     });
@@ -69,7 +74,7 @@ pa.on('connection', async (socket) => {
 
             const messageToSend = { date_timestamp: timestamp, username: sender, message: message, receiver: msg.receiver };  
             
-            if(pa.getSocket(receiver)) { // Check if user is online, basically
+            if(pa.getSocket(receiver)) { // Check if user is online, basically, then send him a message 
                 pa.getSocket(receiver).emit(`Server sent a message`, messageToSend);
             }
                 

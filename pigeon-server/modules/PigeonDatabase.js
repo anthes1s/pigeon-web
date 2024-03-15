@@ -13,7 +13,7 @@ class PigeonDatabase {
 
         this._client.connect()
         .then(() => {
-            console.log("PostgreSQL successfully connected!")
+            console.log("Connected to PostgreSQL...")
         })
         .catch((err) => {
             console.error(`PostgreSQL Error: ${err.message}`);
@@ -70,7 +70,6 @@ class PigeonDatabase {
             }
 
             let messageHistory = await this._client.query(options);
-            console.log(messageHistory.rows);
             return messageHistory.rows;
         } catch(err) {
             console.error(`Error occured while fetching message history: ${err.message}`);

@@ -3,13 +3,15 @@
 const PigeonServer = require('./PigeonServer');
 const PigeonDatabase = require('./PigeonDatabase');
 const PigeonSocketManager = require('./PigeonSocketManager');
+const PigeonCacheManager = require('./PigeonCacheManager');
 const jwt = require('jsonwebtoken');
 
 class PigeonApplication {
     constructor() {
-        this._ps = new PigeonServer();
         this._pd = new PigeonDatabase();
-        this._psm = new PigeonSocketManager();
+        this._pcm = new PigeonCacheManager();
+        this._ps = new PigeonServer();
+        this._psm = new PigeonSocketManager();       
     }
 
     /* PigeonServer Functions */
@@ -37,18 +39,19 @@ class PigeonApplication {
     deleteSocket(socket)                        { this._psm.deleteSocket(socket) }
     getSocket(username)                         { return this._psm.getSocket(username) }
 
+    /* PigeonCacheManager Functions */
+    setCache(key, value)                        { this._pcm.setCache(key, value) }
+    async getCache(key)                         { return await this._pcm.getCache(key) }
+    async checkCache(key)                       { return await this._pcm.checkCache(key) }
+
     /* Create additional routers using PigeonServers getRouter method */
     getAPIRouter() {
         const router = this._ps.getRouter();
-
         /* Now create callbacks as a controllers in a different file/object */
-
         router.post(`/search`, async (req, res) => {
-            /* Find a username in a DB*/
             try {
                 let { username } = req.body;
-                if(!username) return res.json({ success: true, message: `Users were successfully found!`, data: [] })
-
+                if(!username) return res.json({ success: true, message: `Users were successfully found!`, data: [] }); // This is kind of useless because of `favorites`? 
                 let usersFound = await this.userFind(username);
                 res.json({ success: true, message: `Users were successfully found!`, data: usersFound });
             } catch(err) {
@@ -81,6 +84,7 @@ class PigeonApplication {
         })
 
         router.post('/register', async (req, res) => {
+            try {
             let {username, password} = req.body;
             if(await this.usernameExists(username)) {
                 res.json({success: false, message: "Username was already taken"});
@@ -88,11 +92,15 @@ class PigeonApplication {
                 await this.addUser(username, password);
                 res.json({success: true, message: "Registation successful" });
             }
+            } catch (err) {
+                console.error(`Error occurred: ${err.message}`);
+            }
         });
 
 
         /* Add Redis caching here */
         router.post(`/favorites`, async (req, res) => {
+            try {
             let username = req.body.username;
             let result = await this._pd.chatroomFavorites(username);
             let favorites = []
@@ -101,6 +109,9 @@ class PigeonApplication {
                 else if(row.table_name.split(`_`)[1] === username) favorites.push(row.table_name.split('_')[0]);
             }
             res.json({success: true, data: favorites });
+            } catch (err) {
+                console.error(`Error occurred: ${err.message}`);
+            }
         })
 
         return router;
