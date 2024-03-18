@@ -7,7 +7,6 @@ class PigeonSocketManager {
 
     addSocket(username, socket) {
         this._clients.set(username, socket);
-        console.log(this._clients.keys());
     }
 
     deleteSocket(socket) {
@@ -16,7 +15,6 @@ class PigeonSocketManager {
                 this._clients.delete(key);
             }
         });
-        console.log(this._clients.keys());
     }
 
     getSocket(username) {

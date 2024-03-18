@@ -18,9 +18,7 @@ pa.get('/', (req, res) => {
 });
 
 /* TODO: Refactor this somehow */
-pa.on('connection', async (socket) => {
-    console.log(`User connected!`);
-
+pa.on('connection', async (socket) => {   
     let token = socket.handshake.query.jwt; 
     jwt.verify(token, process.env.ACCESS_JWT_TOKEN, (err, decoded) => {
         if(err) {
@@ -43,14 +41,15 @@ pa.on('connection', async (socket) => {
             /* If chat room doesn't exist, create it! */
             if(chatroomName === `Table not found`) {
                 await pa.chatroomCreate(sender, receiver);
-                chatroomName = await pa.chatroomFind(sender, receiver);       
+                chatroomName = await pa.chatroomFind(sender, receiver);  
+                return;     
             }
 
-            /* Add Redis caching here */
             if(await pa.checkCache(chatroomName)) {
                 let messageHistory = await pa.getCache(chatroomName);
                 socket.emit('Server sent a message history', messageHistory);              
             } else {
+                /* */
                 let messageHistory = await pa.getMessageHistory(chatroomName);
                 pa.setCache(chatroomName, messageHistory);
                 socket.emit('Server sent a message history', messageHistory);
@@ -65,7 +64,6 @@ pa.on('connection', async (socket) => {
             console.error(`Error: ${err.message}`);
             return;
         }   
-            console.log(msg);
 
             const timestamp = msg.date_timestamp;
             const sender = decoded.username;
@@ -77,14 +75,17 @@ pa.on('connection', async (socket) => {
             if(pa.getSocket(receiver)) { // Check if user is online, basically, then send him a message 
                 pa.getSocket(receiver).emit(`Server sent a message`, messageToSend);
             }
-                
+
             let chatroomName = await pa.chatroomFind(sender, receiver);
+            /* also update cache if the key to msgs exist */
             await pa.addMessage(chatroomName, { date_timestamp: timestamp, username: sender, message: message });
+            if(await pa.checkCache(chatroomName)) {
+                pa.appendCache(chatroomName, { date_timestamp: timestamp, username: sender, message: message });
+            }
         });    
     });
 
     socket.on('disconnect', () => {
-        console.log(`User disconnected!`);
         pa.deleteSocket(socket);
     });
 

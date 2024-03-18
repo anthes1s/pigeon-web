@@ -41,6 +41,10 @@ class PigeonServer {
 		this._http_server.listen(port, callback);
 	}
 
+	close(callback = undefined) {
+		this._http_server.close(callback);
+	}
+
 	static(root) {
 		return express.static(root)
 	}

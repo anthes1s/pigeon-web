@@ -13,18 +13,38 @@ class PigeonCacheManager {
         console.log(`Connected to Redis...`);
     }
 
-    setCache(key, value) {
-        this._client.setEx(key, 1800, JSON.stringify(value));
+    async setCache(key, value) {
+        try {        
+            await this._client.setEx(key, 1800, JSON.stringify(value).slice(0, -1));
+        } catch (err) {
+            console.error(`Redis Error Occurred: ${err.message}`);
+        }
     }
 
     async getCache(key) {
-        let result = await this._client.get(key);
-        return JSON.parse(result);
+        try {
+            let result = await this._client.get(key);
+            return JSON.parse(result + `]`);
+        } catch(err) {
+            console.error(`Redis Error Occurred: ${err.message}`);
+        }
     }
 
     async checkCache(key) {
-        let result = await this._client.exists(key);
-        return Boolean(result);
+        try {
+            let result = await this._client.exists(key);
+            return Boolean(result);
+        } catch (err) {
+            console.error(`Redis Error Occurred: ${err.message}`);
+        }
+    }
+
+    async appendCache(key, value) {
+        try {          
+            await this._client.append(key, `,` + JSON.stringify(value));
+        } catch (err) {
+            console.error(`Redis Error Occurred: ${err.message}`);
+        }
     }
 }
 

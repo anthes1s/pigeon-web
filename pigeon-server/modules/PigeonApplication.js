@@ -40,9 +40,10 @@ class PigeonApplication {
     getSocket(username)                         { return this._psm.getSocket(username) }
 
     /* PigeonCacheManager Functions */
-    setCache(key, value)                        { this._pcm.setCache(key, value) }
+    async setCache(key, value)                  { await this._pcm.setCache(key, value) }
     async getCache(key)                         { return await this._pcm.getCache(key) }
     async checkCache(key)                       { return await this._pcm.checkCache(key) }
+    async appendCache(key, value)               { await this._pcm.appendCache(key, value) } 
 
     /* Create additional routers using PigeonServers getRouter method */
     getAPIRouter() {
