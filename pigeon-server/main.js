@@ -88,7 +88,6 @@ pa.on('connection', async (socket) => {
     socket.on('disconnect', () => {
         pa.deleteSocket(socket);
     });
-
 });
 
 pa.listen(process.env.SERVER_PORT, () => {

@@ -17,7 +17,7 @@ class PigeonDatabase {
         })
         .catch((err) => {
             console.error(`PostgreSQL Error: ${err.message}`);
-        })
+        });
     }
 
     async userFind(username) {
