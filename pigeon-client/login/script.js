@@ -11,7 +11,7 @@ maindiv.appendChild(statusLabel);
 buttonSignIn.addEventListener('click', () => { 
     statusLabel.style.display = "none";
 
-    axios.post(`/api/login`, {
+    axios.post(`/auth/login`, {
         username: inputLogin.value,
         password: inputPassword.value
     })

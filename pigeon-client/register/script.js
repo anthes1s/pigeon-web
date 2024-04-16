@@ -49,7 +49,7 @@ buttonFinish.addEventListener('click', () => {
         return;
     }
 
-    axios.post('/api/register', {
+    axios.post('/auth/register', {
         username: inputLogin.value,
         password: inputPassword.value
     })
