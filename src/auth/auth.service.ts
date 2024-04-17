@@ -1,15 +1,15 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { LoginDto, RegisterDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+
 import * as argon from 'argon2';
 
 @Injectable()
 export class AuthService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
-    async login(body: LoginDto) {
-        // Check contents of body in a database!
-        
+    async login(body: LoginDto) {      
         const user = await this.prisma.user.findUnique({
             where: {
                 username: body.username,
@@ -20,10 +20,10 @@ export class AuthService {
         const match = await argon.verify(user.password, body.password);
         if(!match) throw new ForbiddenException("Invalid username/password");
 
-        delete user.password;
+        let payload = { userId: user.id, username: user.username };
 
         // return a jwt token later
-        return { success: true, user};
+        return { username: user.username, jwt: await this.jwt.signAsync(payload), success: true };
     }
 
     async register(body: RegisterDto) {
@@ -36,11 +36,11 @@ export class AuthService {
                 }
             });
 
-            console.log(await this.prisma.user.findMany());
+            let payload = { userId: user.id, username: user.username };
+            return { username: user.username, jwt: await this.jwt.signAsync(payload), success: true };
 
-            // return a jwt token later
-            return user;
         } catch(error) {
+            console.log(error);
             throw new ForbiddenException("User already exists");
         }
     }
