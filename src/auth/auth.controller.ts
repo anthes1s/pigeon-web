@@ -26,8 +26,10 @@ export class AuthController {
     return this.authService.register(body);
   }
 
-  // Start writing a frontend to understand what you need to get from that route
   @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Post('verify')
-  verify() {}
+  verify() {
+    return { success: true };
+  }
 }

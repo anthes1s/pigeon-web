@@ -1,0 +1,20 @@
+.center {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Horizontal centering */
+    align-items: center; /* Vertical centering */
+    height: 100vh; /* Make the div fill the entire viewport height */
+}
+
+.component {
+    margin-top: 1px;
+}
+
+#aSignUp {
+    font-size: 13px;
+    margin-top: 3px;
+}
+
+#buttonSignIn {
+    margin-top: 4px;
+}

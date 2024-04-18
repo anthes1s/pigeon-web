@@ -3,14 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Pigeon - Chat</title>
+    <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+    <h1>Chat Page</h1>
+    <!--Container for everything to quickly hide/reveal the components-->
+    <div></div>
+    <!--Container that combines divs below horizontaly-->
+    <div></div>
+    <!--Container for a Search bar and results below inside ordered list-->
+    <div></div>
+    <!--Container for a textarea, message input and a button-->
+    <div></div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
-    <h1>chat page</h1>
-    <script>
-    const socket = io('/chat');
-    socket.emit('message', 'I AM CONNECTED AND I SENT A MESSAGE!1')
-    </script>
+    <script src="./script.js"></script>
 </body>
 </html>
