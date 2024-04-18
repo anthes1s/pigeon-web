@@ -1,11 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
-import { AuthGuard } from 'src/auth/guard';
+import { Controller } from '@nestjs/common';
 
-@UseGuards(AuthGuard)
 @Controller('chat')
-export class ChatController {
-    
-    @Get()
-    chat() {}
-    
-}
+export class ChatController {}
