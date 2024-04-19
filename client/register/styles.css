@@ -1,4 +1,6 @@
 .center {
+    font-size: small;
+    font-family: 'Hack', monospace;
     display: flex;
     flex-direction: column;
     justify-content: center; 
