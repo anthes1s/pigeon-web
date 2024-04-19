@@ -1,20 +1,36 @@
 .center {
     display: flex;
-    flex-direction: column; /* Stack items vertically */
-    justify-content: center; /* Horizontal centering */
-    align-items: center; /* Vertical centering */
-    height: 100vh; /* Make the div fill the entire viewport height */
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
 }
 
-.component {
-    margin-top: 1px;
+.center #inputLogin {
+    border: 1px solid black;
+    margin-bottom: 2px;
+    font-size: small;
+    font-family: 'Hack', monospace;
+    text-align: center;
 }
 
-#aSignUp {
-    font-size: 13px;
-    margin-top: 3px;
+.center #inputPassword {
+    border: 1px solid black;
+    margin-bottom: 2px;
+    font-size: small;
+    font-family: 'Hack', monospace;
+    text-align: center;
 }
 
-#buttonSignIn {
-    margin-top: 4px;
+.center #aSignUp {
+    font-size: small;
+    font-family: 'Hack', monospace;
+    margin-bottom: 2px;
+}
+
+.center #buttonSignIn {
+    border: 1px solid black;
+    font-size: small;
+    font-family: 'Hack', monospace;
+    margin-bottom: 2px;
 }
