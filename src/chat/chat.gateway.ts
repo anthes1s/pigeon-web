@@ -12,6 +12,7 @@ export class ChatGateway {
   @WebSocketServer() server: Server;
 
   onModuleInit() {
+    // Instantiate Event Listeners here:
     this.server.on('connection', (socket) => {
       console.log(socket.id, 'connected');
     });

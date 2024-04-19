@@ -35,6 +35,7 @@ function init() {
             if(success) {
             // Add JWT to the localStorage and redirect to the '/chat' route;
                 localStorage.setItem('jwt', response.data.jwt);
+                localStorage.setItem('username', response.data.username);
                 window.location.href = '/chat';
             }
             

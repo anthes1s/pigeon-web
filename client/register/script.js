@@ -35,6 +35,10 @@ function init() {
     
             console.log(response.data);
             showStatusLabel("Registration successful!", 'Green');
+
+            localStorage.setItem('jwt', response.data.jwt);
+            localStorage.setItem('username', response.data.username);
+
             setTimeout(() => window.location.href = '/chat', 1000);
         } catch(error) {
             if(error.response?.data?.message) showStatusLabel(error.response.data.message, 'Red');
