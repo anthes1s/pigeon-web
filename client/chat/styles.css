@@ -1,0 +1,66 @@
+.application {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.search, .chat {
+    margin-right: 3px;
+}
+
+.search {
+    width: 150px;
+    height: 300px;
+    margin-bottom: 21px;
+}
+
+.search #listUsers {
+    font-size: small;
+    font-family: 'Hack', monospace;
+    padding: 0;
+    margin: 0;
+    border: 1px solid black;  
+    border-top: 0px;
+    width: inherit;
+    text-align: center;
+    height: inherit;
+    list-style-type: none;
+}
+
+.search #inputSearch {
+    font-size: small;
+    font-family: 'Hack', monospace;
+    padding: 0;
+    margin: 0;
+    border: 1px solid black;  
+    width: inherit;
+    text-align: center;
+}
+
+.chat #textareaMessageBox {
+    font-size: small;
+    font-family: 'Hack', monospace;
+    resize: none;
+    border: 1px solid black;
+    margin-top: 1px;
+    height: 289px;
+    width: 412px;
+}
+
+.chat #inputMessage {
+    font-size: small;
+    font-family: 'Hack', monospace;
+    border: 1px solid black;
+    width: 373px;
+    height: 20px;
+}
+
+.chat #buttonSend {
+    font-size: small;
+    font-family: 'Hack', monospace;
+    border: 1px solid black;
+    margin-left: -7px;
+    height: 24px;
+}

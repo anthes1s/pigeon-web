@@ -7,17 +7,22 @@
     <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-    <h1>Chat Page</h1>
-    <!--Container for everything to quickly hide/reveal the components-->
-    <div></div>
-    <!--Container that combines divs below horizontaly-->
-    <div></div>
-    <!--Container for a Search bar and results below inside ordered list-->
-    <div></div>
-    <!--Container for a textarea, message input and a button-->
-    <div></div>
+    <div class="application">
+        <div class="search">
+            <input id="inputSearch" placeholder="Search">
+            <ol id="listUsers">
+                <li>testing1</li>
+            </ol>
+        </div>
+        <div class="chat">
+            <textarea id="textareaMessageBox" readonly></textarea><br>
+            <input id="inputMessage" placeholder="Write a message...">
+            <button id="buttonSend">Send</button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
-    <script src="./script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>  
+    <script type="module" src="./script.js"></script>
 </body>
 </html>
