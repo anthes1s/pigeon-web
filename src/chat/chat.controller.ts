@@ -1,13 +1,18 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { SearchDto } from './dto/search.dto';
+import { SearchDto, FavoritesDto } from './dto';
 
 @Controller('chat')
 export class ChatController {
-    constructor(private chatService: ChatService) {}
+  constructor(private chatService: ChatService) { }
 
-    @Get('search')
-    search(@Query() query: SearchDto) {
-        return this.chatService.search(query);
-    }
+  @Get('search')
+  search(@Query() query: SearchDto) {
+    return this.chatService.search(query);
+  }
+
+  @Get('favorites')
+  favorites(@Query() query: FavoritesDto) {
+    return this.chatService.favorites(query);
+  }
 }

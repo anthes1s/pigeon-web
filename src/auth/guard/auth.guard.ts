@@ -21,7 +21,7 @@ export class AuthGuard implements CanActivate {
     console.log('Token - ', token);
 
     if (!token) {
-      throw new UnauthorizedException("Token is missing");
+      throw new UnauthorizedException('Token is missing');
     }
 
     try {
@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
       });
       request['user'] = payload;
     } catch (error) {
-      throw new UnauthorizedException("Bad Token");
+      throw new UnauthorizedException('Bad Token');
     }
 
     return true;
