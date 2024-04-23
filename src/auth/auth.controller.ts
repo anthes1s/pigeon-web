@@ -16,20 +16,20 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  login(@Body() body: LoginDto) {
-    return this.authService.login(body);
+  async login(@Body() body: LoginDto) {
+    return await this.authService.login(body);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
-  register(@Body() body: RegisterDto) {
-    return this.authService.register(body);
+  async register(@Body() body: RegisterDto) {
+    return await this.authService.register(body);
   }
 
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('verify')
-  verify() {
+  async verify() {
     return { success: true };
   }
 }

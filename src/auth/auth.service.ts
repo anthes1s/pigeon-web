@@ -53,4 +53,9 @@ export class AuthService {
       throw new ForbiddenException('User already exists');
     }
   }
+
+  async verify() {
+    // NOTE: The method just has to go through the guard...
+    return { success: true };
+  }
 }

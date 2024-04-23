@@ -5,4 +5,3 @@ export class FavoritesDto {
   @IsNotEmpty()
   username: string;
 }
-

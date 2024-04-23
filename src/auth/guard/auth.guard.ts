@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -21,7 +22,7 @@ export class AuthGuard implements CanActivate {
     console.log('Token - ', token);
 
     if (!token) {
-      throw new UnauthorizedException('Token is missing');
+      throw new ForbiddenException('Token is missing');
     }
 
     try {
