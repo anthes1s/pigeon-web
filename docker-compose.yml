@@ -1,0 +1,24 @@
+services:
+  dev-db:
+    image: postgres:16
+    ports:
+      - 5434:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES-DB=pigeon-db-dev
+    networks:
+      - localhost
+  test-db:
+    image: postgres:16
+    ports: 
+      - 5435:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES-DB=pigeon-db-test
+    networks:
+      - localhost
+networks:
+  localhost:
+    driver: bridge

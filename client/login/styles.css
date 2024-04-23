@@ -1,0 +1,38 @@
+.center {
+    font-size: small;
+    font-family: 'Hack', monospace;
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
+}
+
+.center #inputLogin {
+    border: 1px solid black;
+    margin-bottom: 2px;
+    font-size: small;
+    font-family: 'Hack', monospace;
+    text-align: center;
+}
+
+.center #inputPassword {
+    border: 1px solid black;
+    margin-bottom: 2px;
+    font-size: small;
+    font-family: 'Hack', monospace;
+    text-align: center;
+}
+
+.center #aSignUp {
+    font-size: small;
+    font-family: 'Hack', monospace;
+    margin-bottom: 2px;
+}
+
+.center #buttonSignIn {
+    border: 1px solid black;
+    font-size: small;
+    font-family: 'Hack', monospace;
+    margin-bottom: 2px;
+}
