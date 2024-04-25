@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { SearchDto, FavoritesDto, MessageDto } from './dto';
 import { UserContainerService } from './user-container/user-container.service';
 
@@ -8,7 +8,7 @@ export class ChatService {
   constructor(
     private prisma: PrismaService,
     private userContainerService: UserContainerService,
-  ) { }
+  ) {}
 
   async search(dto: SearchDto) {
     const users = await this.prisma.user.findMany({

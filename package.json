@@ -6,6 +6,11 @@
   "private": true,
   "license": "GPL-3.0-only",
   "scripts": {
+    "prisma:test:migrate": "dotenv -e .env.test -- npx prisma migrate dev",
+    "prisma:dev:migrate": "npx prisma migrate dev",
+    "db:start": "docker compose up -d",
+    "db:stop": "docker compose down",
+    "db:restart": "npm run db:stop && npm run db:start",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"client/**/*.js\"",
     "start": "nest start",
@@ -13,11 +18,11 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
+    "test": "dotenv -e .env.test -- jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "dotenv -e .env.test -- jest --no-cache --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
